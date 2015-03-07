@@ -1,0 +1,204 @@
+---
+title: about
+aboutActive: active
+---
+
+{% include header.html %}
+
+<div class="row">
+
+<div class="col-xs-0 col-sm-1 col-md-2 col-lg-2"></div>
+
+<div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+    <div class="jumbotron text-center">
+        <h3 class="h2 brand">Markov + composition = Markomposition</h3>
+    </div>
+
+    <p>
+    Markomposition is a Markov chain poetry generator. It first builds a Markov chain
+    from a given piece of text, then creates a new piece of text by randomly combining
+    related transitions from the Markov chain.
+    </p>
+
+    <p>
+    The output is given the affect of poetry by varying levels of enjambment (produced
+    by random selection of types of whitespace to include between words) and "fusion"
+    between different parts of the original text (produced by decreasing the order of
+    the Markov chain).
+    </p>
+
+    <br>
+    <h4 class="text-info">What does "Markov chain" even mean?</h4>
+
+    <p>
+    Don't know what a Markov chain is? Check out this awesome <a href="http://setosa.io/blog/2014/07/26/markov-chains/" target="_blank">
+    visual explanation of Markov chains</a>! 
+    </p><p>
+    The basic idea of Markov chains is that you can model different states of a system, 
+    as well as the probability of transitions between each state.
+    For our purposes, consider that each <i>system</i> is a hunk of text. 
+    In this hunk of text, each word or phrase is a different <i>state</i>. 
+    A <i>transition</i> from state A to state B indicates that the word 
+    in state A is directly followed by the word in state B somewhere in the text.
+
+    <p>Consider this simple example.</p>
+
+    <div class="well">
+    Hello world. Hello universe.
+    </div>
+
+    <p>The first-order Markov chain for this text considers each unique word to 
+    be a state, and identifies a transition between any pair of words that
+    appear successively in the text.</p>
+    
+    <div class="panel panel-primary">
+    <div class="panel-heading">First-Order Markov Chain</div>
+    <div class="panel-body"><table class="table">
+    <tr>
+        <th>State</th>
+        <th>Transition</th>
+    </tr>
+    <tr>
+        <td>"Hello"</td>
+        <td>"Hello" --> "world."</td>
+    </tr>
+    <tr>
+        <td>"world."</td>
+        <td>"world." --> "Hello"</td>
+    </tr>
+    <tr>
+        <td>"universe."</td>
+        <td>"Hello" --> "universe."</td>
+    </tr>
+    </table></div>
+    </div>
+
+    <p>
+    In a <i>second-order Markov chain</i>, each state consists of two words with transitions occuring between states on a common word boundary.
+    </p>
+
+    <div class="panel panel-primary">
+    <div class="panel-heading">Second-Order Markov Chain</div>
+    <div class="panel-body"><table class="table">
+    <tr>
+        <th>State</th>
+        <th>Transition</th>
+    </tr>
+    <tr>
+        <td>"Hello world."</td>
+        <td>"Hello world." --> "world. Hello"</td>
+    </tr>
+    <tr>
+        <td>"world. Hello"</td>
+        <td>"world. Hello" --> "Hello universe."</td>
+    </tr>
+    <tr>
+        <td>"Hello universe."</td>
+        <td></td>
+    </tr>
+    </table></div>
+    </div>
+
+    <p>
+    So then in a <i>third-order Markov chain</i>, each state consists of three words
+    with transitions occuring between states on a common word boundary.
+    </p>
+
+    <div class="panel panel-primary">
+    <div class="panel-heading">Third-Order Markov Chain</div>
+    <div class="panel-body"><table class="table">
+    <tr>
+        <th>State</th>
+        <th>Transition</th>
+    </tr>
+    <tr>
+        <td>"Hello world. Hello"</td>
+        <td>"Hello world. Hello" --> "world. Hello universe."</td>
+    </tr>
+    <tr>
+        <td>"world. Hello universe."</td>
+        <td></td>
+    </tr>
+    </table></div>
+    </div>
+
+    <p>
+    The higher the order of the Markov chain, the fewer combinations can be made within
+    the same body of text. As a result, the output more closely resembles to the input text.
+    Another way to think of it is that lower-order Markov chains produce poems with more fusion
+    between different parts of the text, while higher-order Markov chains produce poems
+    with less fusion.
+    </p>
+
+
+    <br>
+    <h4 class="text-info">How should I use Markomposition?</h4>
+    
+    <p>
+    The quality of the output depends on the quantity <i>and</i> quality of the input.
+    </p>
+
+    <p>
+    Poems will feature greater variety if the content has high frequency of repeated phrases.
+    If every word has only one successor, there's only one possible way to build a new poem --
+    and it's the exact order of the original content, if spaced slightly differently.
+    </p>
+
+    <p>
+    Often, the best poems will be produced from a lot of text -- as in, whole book size. The
+    abundance of content provides lots of variety and creates a large model from which 
+    the generator can choose random combinations.
+    </p>
+
+    <p>
+    I provide sample text from <a href="http://www.gutenberg.org/" target="_blank">Project Gutenberg</a> as a starting point. 
+    I would encourage you to browse their online library of free ebooks for other content. You might also consider
+    using screenplays of movies or television shows, newspaper articles or columns, recipes, court transcripts,
+    legal documents, historic records, instruction manuals, or textbooks -- inspiration for poetry is everywhere!
+    </p>
+
+
+    <br>
+    <h4 class="text-info">How did you make Markomposition?</h4>
+
+    <p>
+    Markomposition was adapted from coursework I completed during the Fall 2012 offerig of COMP 140 at Rice University.
+    The coursework was in Python, but Markomposition is written in Javascript and includes a few more
+    features than the original script -- and hopefully more on the way!
+    </p>
+
+    <p>
+    As mentioned above, I provide sample text from <a href="http://www.gutenberg.org/" target="_blank">Project Gutenberg</a>
+    for Markomposition. The selections do not appear in their original format, but have been edited to remove prefaces
+    and other text that is not directly the work itself. The Gutenberg ebooks used for this project are:
+    <ul>
+    <li><a href="http://www.gutenberg.org/ebooks/12242" target="_blank"><i>Poems</i> by Emily Dickinson</a></li>
+    <li><a href="http://www.gutenberg.org/ebooks/8800" target="_blank"><i>The Divine Comedy</i> by Dante</a></li>
+    <li><a href="http://www.gutenberg.org/ebooks/2591" target="_blank">Grimm's Fairy Tales</a></li>
+    </ul> 
+    </p>  
+
+    <p>
+    Body text is set in <a href="https://www.google.com/fonts/specimen/News+Cycle" target="_blank">News Cycle</a>
+    font with selected headings set in <a href="https://www.google.com/fonts/specimen/Pompiere" target="_blank">Pompiere</a> font.
+    </p>  
+
+    <br>
+    <h4 class="text-info">What else have you made?</h4>
+
+    <p>
+    My latest project is a math and logic game called <a href="http://mariechatfield.com/onetwotree/" target="_blank">one.two.tree</a>.
+    I created it as a fun way to improve my arithmetic skills.
+    </p>
+
+    <p>
+    For more of my past projects or work experience, here's my <a href="http://mariechatfield.com/" target="_blank">portfolio</a>. 
+    Want to know what I'm doing next? <a href="https://github.com/mchat" target="_blank">Follow me on GitHub</a>!
+    </p>
+</div>
+
+<div class="col-xs-0 col-sm-1 col-md-2 col-lg-2"></div>
+
+</div>
+
+{% include footer.html %}

@@ -1,0 +1,42 @@
+<html>
+
+    <head>
+
+        <title>Markomposition</title>
+
+        <!-- Configure viewport to correctly size for iOS mobile devices. -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        <!-- Fonts hosted by Google. -->
+        <link href='http://fonts.googleapis.com/css?family=News+Cycle&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Pompiere' rel='stylesheet' type='text/css'>
+
+        <!-- CSS from Bootstrap with additional custom styling for this page. -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/markomposition/public/resources/styles/custom.css">
+
+        <!-- Load the main application script. -->
+        <script data-main="/markomposition/public/resources/scripts/app" src="/markomposition/public/vendor/require.js"></script>
+
+    </head>
+
+    <body>
+
+        <!-- Page Content -->
+        <div class="container">
+
+            <div class="header">
+
+                <nav>
+                  <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="{{page.homeActive}}"><a href="/">Home</a></li>
+                    <li role="presentation" class="{{page.aboutActive}}"><a href="/about.html">About</a></li>
+                  </ul>
+                </nav>
+
+                <h2 class="text-info brand"><a href="/">Markomposition</a></h2>
+                &#160;&#160;&#160;a markov chain poetry generator
+
+            </div>
+
+            <div id="divider"></div>
