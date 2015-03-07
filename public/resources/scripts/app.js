@@ -48,10 +48,13 @@ function setUpUtilities(Config) {
 
 function loadFile (Config, filename)
 {
+    $('#feedbackText').show();
+
     $.ajax({
         url: '/markomposition/public/resources/texts/' + filename,
         success: function (data) {
             Config.textInput.val(data);
+            $('#feedbackText').hide();
         }
     });
 }
