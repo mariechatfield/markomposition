@@ -1,0 +1,26 @@
+body 
+{
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-family: 'News Cycle', serif;
+}
+
+#brand
+{
+    font-family: 'Pompiere', sans-serif;
+    display: inline;
+}
+
+
+#divider 
+{
+    border-bottom: 1px solid #0a1d29;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+div [class*="col-"]
+{
+    margin-bottom: 50px;
+}

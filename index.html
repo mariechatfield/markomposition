@@ -1,0 +1,134 @@
+<html>
+
+    <head>
+
+        <title>one.two.tree</title>
+
+        <!-- Configure viewport to correctly size for iOS mobile devices. -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        <!-- Fonts hosted by Google. -->
+        <link href='http://fonts.googleapis.com/css?family=News+Cycle&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Pompiere' rel='stylesheet' type='text/css'>
+
+        <!-- CSS from Bootstrap with additional custom styling for this page. -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/markomposition/public/resources/styles/custom.css">
+
+        <!-- Load the main application script. -->
+        <script data-main="/markomposition/public/resources/scripts/app" src="/markomposition/public/vendor/require.js"></script>
+
+    </head>
+
+    <body>
+
+        <!-- Page Content -->
+        <div class="container">
+
+            <div class="header">
+
+                <nav>
+                  <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="active"><a href="#">Home</a></li>
+                    <li role="presentation"><a href="#">About</a></li>
+                  </ul>
+                </nav>
+
+                <h2 id="brand" class="text-info">Markomposition </h2>
+                &#160;&#160;&#160;a markov model poetry generator
+
+            </div>
+
+            <div id="divider"></div>
+
+            <div class="row">
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        
+                        <form>
+
+                            <div class="form-group">
+                                <label for="textInput">Base Content for Poem:</label>
+                                <textarea id="textInput" class="form-control" rows="10"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="enjambmentInput">Enjambment Level:</label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="enjambmentInput" value="least"> least
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="enjambmentInput" value="medium" checked> medium
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="enjambmentInput" value="most"> most
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="chainInput">Fusion Level:</label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="chainInput" value="1"> least
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="chainInput" value="2" checked> medium
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="chainInput" value="3"> most
+                                </label>
+                            </div>
+
+                        </form>
+
+                        <form class="form-inline">
+
+                            <div class="form-group">
+                                <label for="numWordsInput">Maximum Words:</label>
+                                <input type="number" id="numWordsInput" class="form-control" value="100"></input>
+                            </div>                
+
+                        </form>
+
+                        <button id="submitBtn" class="btn btn-primary">Generate Poetry!</button>
+
+                </div>
+                <!-- /.col -->
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div id="poem"></div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+
+
+            <div id="divider"></div>
+
+            <footer>
+                Created by <a href="http://mariechatfield.com/">Marie Chatfield</a>. Adapted from coursework 
+                completed in the Fall 2012 offering of COMP 140 at Rice University.
+            </footer>
+
+        </div>
+        <!-- /.container -->
+
+        <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-54073560-2', 'auto');
+        ga('send', 'pageview');
+        </script>
+
+    </body>
+
+</html>
