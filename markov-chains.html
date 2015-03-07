@@ -1,0 +1,131 @@
+---
+title: Markov Chains
+worksActive: active
+---
+
+{% include header.html %}
+
+<div class="row">
+
+<div class="col-xs-0 col-sm-1 col-md-2 col-lg-2"></div>
+
+<div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+    <h4>
+    Don't know what a Markov chain is? Check out this awesome <a href="http://setosa.io/blog/2014/07/26/markov-chains/" target="_blank">
+    visual explanation of Markov chains</a>! 
+    </h4>
+    <br>
+
+    <p>
+    The basic idea of Markov chains is that you can model different states of a system, 
+    as well as the probability of transitions between each state.
+    For our purposes, consider that each <i>system</i> is a hunk of text. 
+    In this hunk of text, each word or phrase is a different <i>state</i>. 
+    A <i>transition</i> from state A to state B indicates that the word 
+    in state A is directly followed by the word in state B somewhere in the text.
+    </p>
+
+    <p>Consider this simple example.</p>
+    <br>
+
+    <div class="well">
+    Hello world. Hello universe.
+    </div>
+    <br>
+
+    <p>The first-order Markov chain for this text considers each unique word to 
+    be a state, and identifies a transition between any pair of words that
+    appear successively in the text.</p>
+    <br>
+
+    <div class="panel panel-primary">
+    <div class="panel-heading">First-Order Markov Chain</div>
+    <div class="panel-body"><table class="table">
+    <tr>
+        <th>State</th>
+        <th>Transition</th>
+    </tr>
+    <tr>
+        <td>"Hello"</td>
+        <td>"Hello" --> "world."</td>
+    </tr>
+    <tr>
+        <td>"world."</td>
+        <td>"world." --> "Hello"</td>
+    </tr>
+    <tr>
+        <td>"universe."</td>
+        <td>"Hello" --> "universe."</td>
+    </tr>
+    </table></div>
+    </div>
+
+    <br>
+    <p>
+    In a <i>second-order Markov chain</i>, each state consists of two words with transitions occuring between states on a common word boundary.
+    </p>
+    <br>
+
+    <div class="panel panel-primary">
+    <div class="panel-heading">Second-Order Markov Chain</div>
+    <div class="panel-body"><table class="table">
+    <tr>
+        <th>State</th>
+        <th>Transition</th>
+    </tr>
+    <tr>
+        <td>"Hello world."</td>
+        <td>"Hello world." --> "world. Hello"</td>
+    </tr>
+    <tr>
+        <td>"world. Hello"</td>
+        <td>"world. Hello" --> "Hello universe."</td>
+    </tr>
+    <tr>
+        <td>"Hello universe."</td>
+        <td></td>
+    </tr>
+    </table></div>
+    </div>
+
+    <br>
+    <p>
+    So then in a <i>third-order Markov chain</i>, each state consists of three words
+    with transitions occuring between states on a common word boundary.
+    </p>
+    <br>
+
+    <div class="panel panel-primary">
+    <div class="panel-heading">Third-Order Markov Chain</div>
+    <div class="panel-body"><table class="table">
+    <tr>
+        <th>State</th>
+        <th>Transition</th>
+    </tr>
+    <tr>
+        <td>"Hello world. Hello"</td>
+        <td>"Hello world. Hello" --> "world. Hello universe."</td>
+    </tr>
+    <tr>
+        <td>"world. Hello universe."</td>
+        <td></td>
+    </tr>
+    </table></div>
+    </div>
+
+    <br>
+    <p>
+    The higher the order of the Markov chain, the fewer combinations can be made within
+    the same body of text. As a result, the output more closely resembles to the input text.
+    Another way to think of it is that lower-order Markov chains produce poems with more fusion
+    between different parts of the text, while higher-order Markov chains produce poems
+    with less fusion.
+    </p>
+
+</div>
+
+<div class="col-xs-0 col-sm-1 col-md-2 col-lg-2"></div>
+
+</div>
+
+{% include footer.html %}
