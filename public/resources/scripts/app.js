@@ -8,7 +8,7 @@ require.config({
 /**
  * Set up any global utility methods that will be used in the application.
  */
-function setUpUtilities(Config) {
+var setUpUtilities = function () {
     'use strict';
 
     // String format, from http://stackoverflow.com/a/4673436
@@ -44,9 +44,9 @@ function setUpUtilities(Config) {
             }
         }
     };
-}
+};
 
-function loadFile (Config, filename)
+var loadFile = function (Config, filename)
 {
     $('#feedbackText').show();
 
@@ -57,7 +57,7 @@ function loadFile (Config, filename)
             $('#feedbackText').hide();
         }
     });
-}
+};
 
 /**
  * Initialize game environment and start the application.
