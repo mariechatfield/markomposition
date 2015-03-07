@@ -24,3 +24,8 @@ div [class*="col-"]
 {
     margin-bottom: 50px;
 }
+
+button
+{
+  margin: 5px;
+}

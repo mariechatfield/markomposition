@@ -46,6 +46,16 @@ function setUpUtilities(Config) {
     };
 }
 
+function loadFile (Config, filename)
+{
+    $.ajax({
+        url: '/markomposition/public/resources/texts/' + filename,
+        success: function (data) {
+            Config.textInput.val(data);
+        }
+    });
+}
+
 /**
  * Initialize game environment and start the application.
  */
@@ -57,16 +67,24 @@ require([
 
     'use strict';
 
-    $.ajax({
-        url: '/markomposition/public/resources/texts/dickinson.txt',
-        success: function (data) {
-            Config.textInput.val(data);
-        }
-    });
-
     setUpUtilities(Config);
 
     Config.submitBtn.off('click');
     Config.submitBtn.click(Generate);
+
+    $('#dickinson').click(function ()
+    {
+        loadFile(Config, 'dickinson.txt');
+    });
+
+    $('#dante').click(function ()
+    {
+        loadFile(Config, 'divine_comedy.txt');
+    });
+
+    $('#grimm').click(function ()
+    {
+        loadFile(Config, 'grimm.txt');
+    });
 
 });
