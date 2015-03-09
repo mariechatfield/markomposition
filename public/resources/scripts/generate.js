@@ -86,7 +86,7 @@ define('generate', [
     {
         $('#feedbackPoem').show();
 
-        if (false)
+        if ($('#freeVerseTab').hasClass('active'))
         {
             Generate.freeVerse();
         }
