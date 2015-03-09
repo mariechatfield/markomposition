@@ -29,18 +29,6 @@ homeActive: active
                 </div>
 
                 <br>
-                <div class="form-group">
-                    <label for="enjambmentInput">Enjambment Level:</label>
-                    <label class="radio-inline">
-                      <input type="radio" name="enjambmentInput" value="least"> least
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio" name="enjambmentInput" value="medium" checked> medium
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio" name="enjambmentInput" value="most"> most
-                    </label>
-                </div>
 
                 <div class="form-group">
                     <label for="chainInput">Fusion Level:</label>
@@ -54,17 +42,60 @@ homeActive: active
                       <input type="radio" name="chainInput" value="1"> most
                     </label>
                 </div>
-
             </form>
 
-            <form class="form-inline">
+            <div role="tabpanel" class="panel panel-default">
 
-                <div class="form-group">
-                    <label for="numWordsInput">Maximum Words:</label>
-                    <input type="number" id="numWordsInput" class="form-control" value="100"></input>
-                </div>                
+              <!-- Nav tabs -->
+              <ul id="formTab" class="nav nav-tabs panel-heading" role="tablist">
+                <li role="presentation" class="active"><a href="#freeVerseOptions" aria-controls="freeVerse" role="tab" data-toggle="tab">Free Verse</a></li>
+                <li role="presentation"><a href="#haiku" aria-controls="haiku" role="tab" data-toggle="tab">Haiku</a></li>
+              </ul>
 
-            </form>
+              <!-- Tab panes -->
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane panel-body active" id="freeVerseOptions">
+                    
+                    <form>
+                        <div class="form-group">
+                            <label for="enjambmentInput" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">Enjambment Level:</label>
+                            <label class="radio-inline">
+                              <input type="radio" name="enjambmentInput" value="least"> least
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="enjambmentInput" value="medium" checked> medium
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="enjambmentInput" value="most"> most
+                            </label>
+                        </div>
+                    </form>
+
+                    <form class="form-inline">
+
+                        <div class="form-group">
+                            <label for="numWordsInput">Maximum Words:</label>
+                            <input type="number" id="numWordsInput" class="form-control" value="100"></input>
+                        </div>                
+
+                    </form>
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="haiku">
+                    
+                    <form class="form-inline">
+
+                        <div class="form-group">
+                            <label for="numHaikuInput">Maximum Haikus:</label>
+                            <input type="number" id="numHaikuInput" class="form-control" value="3"></input>
+                        </div>                
+
+                    </form>
+
+                </div>
+              </div>
+
+            </div>
 
             <button id="submitBtn" class="btn btn-primary">Generate Poetry! <img id="feedbackPoem" src="/markomposition/public/resources/images/execution-feedback-blue.gif" />
         </button>

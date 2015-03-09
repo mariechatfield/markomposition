@@ -34,7 +34,19 @@ textarea
   resize: vertical;
 }
 
-#feedbackText, #feedbackPoem
+#feedbackText, #feedbackPoem, #haikuOptions
 {
   display: none;
+}
+
+.tab-pane
+{
+  margin: 5px;
+  padding: 10px;
+  min-height: 25px;
+}
+
+.panel-heading
+{
+  padding-bottom: 0px;
 }

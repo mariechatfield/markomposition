@@ -1,14 +1,20 @@
 require.config({
+    shim: {
+        bootstrap: {
+            deps: ['jquery']
+        }
+    },
     baseUrl: '/markomposition/public/resources/scripts',
     paths: {
-        'jquery': '/markomposition/public/vendor/jquery.min'
+        'jquery': '/markomposition/public/vendor/jquery.min',
+        'bootstrap':'//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min'
     }
 });
 
 /**
  * Set up any global utility methods that will be used in the application.
  */
-var setUpUtilities = function () {
+var setUpUtilities = function (Config) {
     'use strict';
 
     // String format, from http://stackoverflow.com/a/4673436
@@ -44,6 +50,18 @@ var setUpUtilities = function () {
             }
         }
     };
+
+    $.ajax({
+        url: '/markomposition/public/resources/IPhOD2_Words_Adapted.json',
+        success: function (data) {
+            Config.iphodCorpus = data;
+        }
+    });
+
+    $('#formTab a').click(function (e) {
+      e.preventDefault();
+      $(this).tab('show');
+    });
 };
 
 var loadFile = function (Config, filename)
@@ -65,7 +83,8 @@ var loadFile = function (Config, filename)
 require([
     'jquery',
     'app.config',
-    'generate'
+    'generate',
+    'bootstrap'
 ], function ($, Config, Generate) {
 
     'use strict';

@@ -1,4 +1,4 @@
-define([
+define('app.config', [
     'jquery'
 ], function ($) {
 
@@ -9,7 +9,9 @@ define([
         submitBtn:          $('#submitBtn'),
         textInput:          $('#textInput'),
         numWordsInput:      $('#numWordsInput'),
-        poem:               $('#poem')
+        poem:               $('#poem'),
+
+        iphodCorpus:        {}
     	
     };
 
