@@ -5,6 +5,16 @@ define('util', [
 {
     var Util = {};
 
+    Util.displayError = function (message)
+    {
+        Config.poem.html('<h3 class="text-danger">' + message + '</h3>');
+    };
+
+    Util.randomChoice = function (array)
+    {
+        return array[Math.floor(Math.random()*array.length)];
+    };
+
     Util.stripWord = function (word)
     {
         return word.trim()
@@ -52,6 +62,138 @@ define('util', [
 
         return count;
     };
+
+    Util.addWhitespace = function (context, string, frequency)
+    {
+        var i;
+
+        for (i = 0; i < frequency; i++)
+        {
+            context.WHITESPACE.push(string);
+        }
+    };
+
+    Util.setUpWhitespace = function (context)
+    {
+        context.WHITESPACE = [];
+
+        switch (context.enjambmentLevel)
+        {
+            case 'most':
+            {
+                Util.addWhitespace(context, '&#160;', 50);
+                Util.addWhitespace(context, '&#160;&#160;', 25);
+                Util.addWhitespace(context, '&#160;&#160;&#160;&#160;&#160;', 
+                                   25);
+                Util.addWhitespace(context, '<br>', 20);
+                Util.addWhitespace(context, '<br><br>', 20);
+                Util.addWhitespace(context, '<br>&#160;', 20);
+                Util.addWhitespace(context, '<br>&#160;&#160;', 20);
+                Util.addWhitespace(context, '<br>&#160;&#160;&#160;&#160;', 20);
+                break;
+            }
+
+            case 'medium':
+            {
+                Util.addWhitespace(context, '&#160;', 100);
+                Util.addWhitespace(context, '&#160;&#160;', 25);
+                Util.addWhitespace(context, '<br>', 25);
+                Util.addWhitespace(context, '<br>&#160;', 25);
+                Util.addWhitespace(context, '<br>&#160;&#160;', 25);
+                break;
+            }
+
+            default:
+            {
+                Util.addWhitespace(context, '&#160;', 175);
+                Util.addWhitespace(context, '<br>', 25);
+                break;
+            }
+        }
+
+    };
+
+    Util.getTuple = function (context, index)
+    {
+        var tuple = [],
+            i;
+
+        for (i = 0; i < context.chainLevel; i++)
+        {
+            tuple.push(context.words[index + i]);
+        }
+
+        return tuple;
+    };
+
+    Util.makeNextTuple = function (context)
+    {
+        return context.currentTuple
+                .slice(1, context.chainLevel)
+                .concat(Util.randomChoice(
+                        context.model[context.currentTuple].nextWords));
+    };
+
+    Util.makeAllNextTuples = function (context)
+    {
+        var tuples = [],
+            nextWords,
+            i, j;
+
+        if (context.model[context.currentTuple] === undefined) 
+        {
+            return tuples;
+        }
+
+        nextWords = context.model[context.currentTuple].nextWords;
+
+        for (i in nextWords)
+        {
+            var potentialWord = nextWords[i],
+                numSyllables = Util.getSyllableWord(potentialWord);
+
+            if (numSyllables > context.maxSyllables || numSyllables === -1)
+            {
+                continue;
+            }
+
+            tuples.push(context.currentTuple.slice(1, context.chainLevel)
+                                    .concat(potentialWord));
+        }
+
+        return tuples;
+    };
+
+    Util.completeLine = function (context)
+    {
+        var nextTuple,
+            nextWord,
+            allNextTuples;
+
+        while (context.syllablesLeft > 0)
+        {
+            allNextTuples = Util.makeAllNextTuples(context);
+
+            if (allNextTuples.length === 0)
+            {
+                return -1;
+            }
+            else 
+            {
+                nextTuple = Util.randomChoice(allNextTuples);
+                nextWord = nextTuple[context.chainLevel - 1];
+                context.poem += ' ' + nextWord;
+                context.syllablesLeft -= Util.getSyllableWord(nextWord);
+
+                context.currentTuple = nextTuple;
+            }
+        }
+
+        context.poem += '<br>';
+
+        return 0;
+    };
+
 
     return Util;
 

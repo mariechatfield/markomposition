@@ -6,155 +6,83 @@ define('generate', [
     'use strict';
 
     var Generate = {},
-        DEBUG = false,
-        WHITESPACE,
-        words,
-        model,
-        chainLevel,
-        currentTuple,
-        poem,
-        syllablesLeft;
-
-    var addWhitespace = function (string, frequency)
-    {
-        var i;
-
-        for (i = 0; i < frequency; i++)
-        {
-            WHITESPACE.push(string);
-        }
-    };
-
-    var randomChoice = function (array)
-    {
-        return array[Math.floor(Math.random()*array.length)];
-    };
-
-    var getTuple = function (index)
-    {
-        var tuple = [],
-            i;
-
-        for (i = 0; i < chainLevel; i++)
-        {
-            tuple.push(words[index + i]);
-        }
-
-        return tuple;
-    };
-
-    var setUpWhitespace = function (enjambmentLevel)
-    {
-        WHITESPACE = [];
-
-        switch (enjambmentLevel)
-        {
-            case 'most':
-            {
-                addWhitespace('&#160;', 50);
-                addWhitespace('&#160;&#160;', 25);
-                addWhitespace('&#160;&#160;&#160;&#160;&#160;', 25);
-                addWhitespace('<br>', 20);
-                addWhitespace('<br><br>', 20);
-                addWhitespace('<br>&#160;', 20);
-                addWhitespace('<br>&#160;&#160;', 20);
-                addWhitespace('<br>&#160;&#160;&#160;&#160;', 20);
-                break;
-            }
-
-            case 'medium':
-            {
-                addWhitespace('&#160;', 100);
-                addWhitespace('&#160;&#160;', 25);
-                addWhitespace('<br>', 25);
-                addWhitespace('<br>&#160;', 25);
-                addWhitespace('<br>&#160;&#160;', 25);
-                break;
-            }
-
-            default:
-            {
-                addWhitespace('&#160;', 175);
-                addWhitespace('<br>', 25);
-                break;
-            }
-        }
-
-    };
+        DEBUG = false;
 
     Generate.generate = function () 
     {
         $('#feedbackPoem').show();
 
+        var context = {},
+            text = Config.textInput.val();
+
+        text.replace('\n', '<br>');
+        text.replace('\t', '&#160;&#160;&#160;&#160;');
+
+        context.words = text.split(/\s+/);
+        context.model = {};
+
+        context.chainLevel = parseInt($('input[name="chainInput"]:checked')
+                                      .val());
+
         if ($('#freeVerseTab').hasClass('active'))
         {
-            Generate.freeVerse();
+            Generate.freeVerse(context);
         }
-        else
+        else if ($('#haikuTab').hasClass('active'))
         {
-            Generate.haiku();
+            Generate.haiku(context);
         }
 
         $('#feedbackPoem').hide();
 
     };
 
-    var makeNextTuple = function (currentTuple)
-    {
-        return currentTuple.slice(1, chainLevel)
-                           .concat(randomChoice(model[currentTuple].nextWords));
-    };
+    Generate.freeVerse = function (context) {
 
-    Generate.freeVerse = function () {
-
-        var text = Config.textInput.val(),
-            numWords = parseInt(Config.numWordsInput.val()),
-            enjambmentLevel = $('input[name="enjambmentInput"]:checked').val(),
-            allTuples = [],
+        var allTuples = [],
             i;
-        
-        text.replace('\n', '<br>');
-        text.replace('\t', '&#160;&#160;&#160;&#160;');
 
-        words = text.split(/\s+/);
-        model = {};
-        chainLevel = parseInt($('input[name="chainInput"]:checked').val());
+        context.numWords = parseInt(Config.numWordsInput.val());
+        context.enjambmentLevel = $('input[name="enjambmentInput"]:checked')
+                                    .val();
 
-        setUpWhitespace(enjambmentLevel);
+        Util.setUpWhitespace(context);
 
         if (DEBUG) 
         { 
-            console.log('Words: ', words);
-            console.log('Chain Length: ', chainLevel);
-            console.log('numWords: ', numWords);
+            console.log('Words: ', context.words);
+            console.log('Chain Length: ', context.chainLevel);
+            console.log('numWords: ', context.numWords);
         }
 
         /* Build the Markov model. */
-        for (i = 0; i < words.length - chainLevel; i++)
+        for (i = 0; i < context.words.length - context.chainLevel; i++)
         {
-            var tuple = getTuple(i);
+            var tuple = Util.getTuple(context, i);
 
-            if (model[tuple] === undefined)
+            if (context.model[tuple] === undefined)
             {
-                model[tuple] = {tuple: tuple, 
+                context.model[tuple] = {tuple: tuple, 
                                 nextWords:[]};
             }
 
-            model[tuple].nextWords.push(words[i + chainLevel]);
+            context.model[tuple].nextWords
+                .push(context.words[i + context.chainLevel]);
         }
 
         if (DEBUG) 
         {
-            console.log('Model: ', model);
+            console.log('Model: ', context.model);
         }
 
         /* Build the poem from the model. */
 
-        for (var t in model)
+        for (var t in context.model)
         {
-            if (model.hasOwnProperty(t) && model[t].tuple !== undefined)
+            if (context.model.hasOwnProperty(t) && 
+                context.model[t].tuple !== undefined)
             {
-                allTuples.push(model[t].tuple);
+                allTuples.push(context.model[t].tuple);
             }
         }
 
@@ -163,107 +91,51 @@ define('generate', [
             console.log('allTuples: ', allTuples);   
         }
 
-        currentTuple = randomChoice(allTuples);
+        context.currentTuple = Util.randomChoice(allTuples);
         
-        poem = currentTuple[0];
+        context.poem = context.currentTuple[0];
 
         if (DEBUG)
         {
-            console.log(currentTuple);
+            console.log(context.currentTuple);
         }
 
-        for (i = 1; i < currentTuple.length; i++)
+        for (i = 1; i < context.currentTuple.length; i++)
         {
-            poem += randomChoice(WHITESPACE) + currentTuple[i];
-        }
-
-        if (DEBUG) {
-            console.log('Poem (begin): ', poem);   
-        }
-
-        for (i = 0; i < numWords - chainLevel; i++)
-        {
-            if (model[currentTuple] === undefined)
-            {
-                break;
-            }
-
-            var nextTuple = makeNextTuple(currentTuple);
-            poem += randomChoice(WHITESPACE) + nextTuple[chainLevel - 1];
-            currentTuple = nextTuple;
+            context.poem += Util.randomChoice(context.WHITESPACE) + 
+                            context.currentTuple[i];
         }
 
         if (DEBUG) 
         {
-            console.log('Poem: ', poem);
+            console.log('Poem (begin): ', context.poem);   
         }
 
-        Config.poem.html(poem);
+        for (i = 0; i < context.numWords - context.chainLevel; i++)
+        {
+            if (context.model[context.currentTuple] === undefined)
+            {
+                break;
+            }
+
+            var nextTuple = Util.makeNextTuple(context);
+            context.poem += Util.randomChoice(context.WHITESPACE) + 
+                            nextTuple[context.chainLevel - 1];
+            context.currentTuple = nextTuple;
+        }
+
+        if (DEBUG) 
+        {
+            console.log('Poem: ', context.poem);
+        }
+
+        Config.poem.html(context.poem);
 
     };
 
-    var makeAllNextTuples = function (currentTuple, maxSyllables)
+    Generate.haiku = function (context)
     {
-        var tuples = [],
-            nextWords,
-            i, j;
-
-        if (model[currentTuple] === undefined) 
-        {
-            return tuples;
-        }
-
-        nextWords = model[currentTuple].nextWords;
-
-        for (i in nextWords)
-        {
-            var potentialWord = nextWords[i],
-                numSyllables = Util.getSyllableWord(potentialWord);
-
-            if (numSyllables > maxSyllables || numSyllables === -1)
-            {
-                continue;
-            }
-
-            tuples.push(currentTuple.slice(1, chainLevel)
-                                    .concat(potentialWord));
-        }
-
-        return tuples;
-    };
-
-    var completeLine = function ()
-    {
-        var nextTuple,
-            nextWord,
-            allNextTuples;
-
-        while (syllablesLeft > 0)
-        {
-            allNextTuples = makeAllNextTuples(currentTuple, syllablesLeft);
-
-            if (allNextTuples.length === 0)
-            {
-                return -1;
-            }
-            else 
-            {
-                nextTuple = randomChoice(allNextTuples);
-                nextWord = nextTuple[chainLevel - 1];
-                poem += ' ' + nextWord;
-                syllablesLeft -= Util.getSyllableWord(nextWord);
-
-                currentTuple = nextTuple;
-            }
-        }
-
-        return 0;
-    };
-
-    Generate.haiku = function ()
-    {
-        var text = Config.textInput.val(),
-            allTuples = [],
+        var allTuples = [],
             MIN_SYLLABLES = 5,
             MAX_SYLLABLES = 7,
             ATTEMPTS_PER_HAIKU = 50,
@@ -272,56 +144,49 @@ define('generate', [
             numHaikuCreated = 0,
             i, j;
 
-        var errorMessage = '<h3 class="text-danger">Uh-oh... couldn\'t create' +
-                            ' a haiku. Try again!</h3>';
-        
-        Config.poem.html('');
+        context.MAX_SYLLABLES = 7;
 
-        text.replace('\n', '<br>');
-        text.replace('\t', '&#160;&#160;&#160;&#160;');
-
-        words = text.split(/\s+/);
-        model = {};
-        chainLevel = parseInt($('input[name="chainInput"]:checked').val());
         numHaikuRequested = parseInt($('#numHaikuInput').val());
+        Config.poem.html('');
 
         if (DEBUG) 
         { 
-            console.log('Words: ', words);
-            console.log('Chain Length: ', chainLevel);
+            console.log('Words: ', context.words);
+            console.log('Chain Length: ', context.chainLevel);
         }
 
         /* Build the Markov model. */
-        for (i = 0; i < words.length - chainLevel; i++)
+        for (i = 0; i < context.words.length - context.chainLevel; i++)
         {
-            var tuple = getTuple(i);
+            var tuple = Util.getTuple(context, i);
 
-            if (model[tuple] === undefined)
+            if (context.model[tuple] === undefined)
             {
-                model[tuple] = {tuple: tuple, 
-                                nextWords:[]};
+                context.model[tuple] = {tuple: tuple, 
+                                        nextWords:[]};
             }
 
-            var nextWord = words[i + chainLevel],
+            var nextWord = context.words[i + context.chainLevel],
                 syllables = Util.getSyllableWord(nextWord);
 
             if (syllables >= 0) {
-                model[tuple].nextWords.push(nextWord);   
+                context.model[tuple].nextWords.push(nextWord);   
             }
         }
 
         if (DEBUG) 
         {
-            console.log('Model: ', model);
+            console.log('Model: ', context.model);
         }
 
         /* Build the poem from the model. */
 
-        for (var t in model)
+        for (var t in context.model)
         {
-            if (model.hasOwnProperty(t) && model[t].tuple !== undefined)
+            if (context.model.hasOwnProperty(t) && 
+                context.model[t].tuple !== undefined)
             {
-                allTuples.push(model[t].tuple);
+                allTuples.push(context.model[t].tuple);
             }
         }
 
@@ -330,8 +195,8 @@ define('generate', [
             console.log('allTuples: ', allTuples);   
         }
 
-        attemptLoop:
-        for (attempt = 0; attempt < ATTEMPTS_PER_HAIKU * numHaikuRequested; 
+        for (attempt = 0; 
+             attempt < ATTEMPTS_PER_HAIKU * numHaikuRequested; 
              attempt++)
         {
             if (DEBUG)
@@ -339,8 +204,8 @@ define('generate', [
                 console.debug('attempt: ' + attempt);
             }
 
-            currentTuple = randomChoice(allTuples);   
-            if (Util.getSyllableTuple(currentTuple) > MIN_SYLLABLES)
+            context.currentTuple = Util.randomChoice(allTuples);   
+            if (Util.getSyllableTuple(context.currentTuple) > MIN_SYLLABLES)
             {
                 if (DEBUG)
                 {
@@ -349,25 +214,26 @@ define('generate', [
                 continue;
             }
             
-            poem = currentTuple[0];
+            context.poem = context.currentTuple[0];
 
-            syllablesLeft = MIN_SYLLABLES - Util.getSyllableTuple(currentTuple);
+            context.syllablesLeft = MIN_SYLLABLES - 
+                                    Util.getSyllableTuple(context.currentTuple);
 
             if (DEBUG)
             {
-                console.log(currentTuple);
+                console.log(context.currentTuple);
             }
 
-            for (i = 1; i < currentTuple.length; i++)
+            for (i = 1; i < context.currentTuple.length; i++)
             {
-                poem += ' ' + currentTuple[i];
+                context.poem += ' ' + context.currentTuple[i];
             }
 
             if (DEBUG) {
-                console.log('Poem (begin): ', poem);   
+                console.log('Poem (begin): ', context.poem);   
             }
 
-            if (completeLine(currentTuple) === -1)
+            if (Util.completeLine(context) === -1)
             {
                 if (DEBUG)
                 {
@@ -376,10 +242,9 @@ define('generate', [
                 continue;
             }
 
-            poem += '<br>';
-            syllablesLeft = MAX_SYLLABLES;
+            context.syllablesLeft = MAX_SYLLABLES;
 
-            if (completeLine(currentTuple) === -1)
+            if (Util.completeLine(context) === -1)
             {
                 if (DEBUG)
                 {
@@ -388,10 +253,9 @@ define('generate', [
                 continue;
             }
 
-            poem += '<br>';
-            syllablesLeft = MIN_SYLLABLES;
+            context.syllablesLeft = MIN_SYLLABLES;
 
-            if (completeLine(currentTuple) === -1)
+            if (Util.completeLine(context) === -1)
             {
                 if (DEBUG)
                 {
@@ -400,9 +264,9 @@ define('generate', [
                 continue;
             }
 
-            poem += '<br><br>';
+            context.poem += '<br>';
 
-            Config.poem.append(poem);
+            Config.poem.append(context.poem);
             numHaikuCreated++;
 
             if (numHaikuCreated === numHaikuRequested)
@@ -414,7 +278,7 @@ define('generate', [
 
         if (numHaikuCreated === 0)
         {
-            Config.poem.html(errorMessage);   
+            Util.displayError('Uh-oh! Couldn\'t create a poem. Try again!'); 
         }
     };
 

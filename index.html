@@ -27,21 +27,6 @@ homeActive: active
                     <button id="dante" type="button" class="btn btn-success">Dante's <i>Divine Comedy</i></button>
                     <button id="grimm" type="button" class="btn btn-success">Grimm's <i>Fairy Tales</i></button>
                 </div>
-
-                <br>
-
-                <div class="form-group">
-                    <label for="chainInput">Fusion Level:</label>
-                    <label class="radio-inline">
-                      <input type="radio" name="chainInput" value="3"> least
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio" name="chainInput" value="2" checked> medium
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio" name="chainInput" value="1"> most
-                    </label>
-                </div>
             </form>
 
             <div role="tabpanel" class="panel panel-default">
@@ -96,6 +81,23 @@ homeActive: active
               </div>
 
             </div>
+
+            <form>
+
+                <div class="form-group">
+                    <label for="chainInput">Fusion Level:</label>
+                    <label class="radio-inline">
+                      <input type="radio" name="chainInput" value="3"> least
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="chainInput" value="2" checked> medium
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="chainInput" value="1"> most
+                    </label>
+                </div>
+
+            </form>
 
             <button id="submitBtn" class="btn btn-primary">Generate Poetry! <img id="feedbackPoem" src="/markomposition/public/resources/images/execution-feedback-blue.gif" />
         </button>
