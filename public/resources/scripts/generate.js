@@ -17,11 +17,17 @@ define('generate', [
             'Whoops! Markomposition couldn\'t generate a poem using the ' +
             'given text and poem parameters. ',
         CANNOT_GENERATE_POEM_B = 
-            'You might try adding more text ' +
-            'as this gives the generator more choices to work with. Also, ' + 
-            'be sure that your text has a variety of words with different ' + 
-            'word lengths and ending sounds if you are using a poetic form ' + 
-            'that is defined by rhyme scheme or syllables!';
+            '<p>You might try adding more text ' +
+            'as this gives the generator more choices to work with. </p>' + 
+            'Also, be sure that your text has a variety of words with ' + 
+            'different word lengths and ending sounds if you are using a' + 
+            'poetic form that is defined by rhyme scheme or syllables! </p> ' +
+            '<p>You can also try increasing the fusion level or trying a ' +
+            'different poetic form. </p>' +
+            '<p>Additionally, Markomposition cannot create poems based on  ' +
+            'syllable or rhyme if it does not recognize the word. Currently, ' +
+            'only words in the <a href="http://www.iphod.com/">Irvine ' + 
+            'Phototactic Online Dictionary</a> are recognized.</p>';
 
     Generate.generate = function () 
     {
@@ -60,6 +66,7 @@ define('generate', [
             for (i = 0; i < numHaikuRequested; i++)
             {
                 context.meterScheme = [5, 7, 5];
+                
                 if (Generate.meter(context) === 0)
                 {
                     poem += context.poem + '<br>';
@@ -76,6 +83,52 @@ define('generate', [
                 Config.poem.html(poem);
             }
 
+        }
+        else if ($('#tankaTab').hasClass('active'))
+        {
+            poem = '';
+
+            var numTankaRequested = parseInt($('#numTankaInput').val());
+
+            for (i = 0; i < numTankaRequested; i++)
+            {
+                context.meterScheme = [5, 7, 5, 7, 7];
+                
+                if (Generate.meter(context) === 0)
+                {
+                    poem += context.poem + '<br>';
+                }
+            }
+
+            if (poem === '')
+            {
+                Util.displayError(CANNOT_GENERATE_POEM_H, 
+                                      CANNOT_GENERATE_POEM_B); 
+            }
+            else
+            {
+                Config.poem.html(poem);
+            }
+
+        }
+        else if ($('#sonnetTab').hasClass('active'))
+        {
+            context.meterScheme = [];
+
+            for (i = 0; i < 10; i++)
+            {
+                context.meterScheme.push(10);
+            }
+            
+            if (Generate.meter(context) === 0)
+            {
+                Config.poem.html(context.poem);
+            }
+            else
+            {
+                Util.displayError(CANNOT_GENERATE_POEM_H, 
+                                      CANNOT_GENERATE_POEM_B); 
+            }
         }
 
         $('#feedbackPoem').hide();

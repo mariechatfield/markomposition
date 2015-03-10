@@ -26,6 +26,9 @@ homeActive: active
                     <button id="dickinson" type="button" class="btn btn-success">Emily Dickinson</button>
                     <button id="dante" type="button" class="btn btn-success">Dante's <i>Divine Comedy</i></button>
                     <button id="grimm" type="button" class="btn btn-success">Grimm's <i>Fairy Tales</i></button>
+                    <button id="petrarch" type="button" class="btn btn-success">Petrarch's Sonnets</button>
+                    <button id="declaration" type="button" class="btn btn-success">Declaration of Independence</button>
+                    <button id="shakespeare" type="button" class="btn btn-success">Shakespeare's <i>Hamlet</i></button>
                 </div>
             </form>
 
@@ -33,14 +36,22 @@ homeActive: active
 
               <!-- Nav tabs -->
               <ul id="formTab" class="nav nav-tabs panel-heading" role="tablist">
-                <li id="freeVerseTab" role="presentation" class="active"><a href="#freeVerseOptions" aria-controls="freeVerse" role="tab" data-toggle="tab">Free Verse</a></li>
+                <li id="freeVerseTab" role="presentation" class="active"><a href="#freeVerse" aria-controls="freeVerse" role="tab" data-toggle="tab">Free Verse</a></li>
                 <li id="haikuTab" role="presentation"><a href="#haiku" aria-controls="haiku" role="tab" data-toggle="tab">Haiku</a></li>
+                <li id="tankaTab" role="presentation"><a href="#tanka" aria-controls="tanka" role="tab" data-toggle="tab">Tanka</a></li>
+                <li id="sonnetTab" role="presentation"><a href="#sonnet" aria-controls="sonnet" role="tab" data-toggle="tab">Sonnet</a></li>
               </ul>
 
               <!-- Tab panes -->
               <div class="tab-content">
-                <div role="tabpanel" class="tab-pane panel-body active" id="freeVerseOptions">
+                <div role="tabpanel" class="tab-pane panel-body active" id="freeVerse">
                     
+                    <h4 class="h4">
+                        <b>Free Verse:</b> A poetic form with no set meter or rhyme scheme. 
+                        <a href="http://www.poets.org/poetsorg/text/poets-glossary-free-verse" target="_blank">
+                        Learn more!</a>
+                    </h4>
+
                     <form>
                         <div class="form-group">
                             <label for="enjambmentInput" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">Enjambment Level:</label>
@@ -65,9 +76,16 @@ homeActive: active
 
                     </form>
 
-                </div>
+                </div> <!-- /freeVerse -->
+                
                 <div role="tabpanel" class="tab-pane" id="haiku">
                     
+                    <h4 class="h4">
+                        <b>Haiku:</b> A form of Japanese poetry consisting of three lines, with the syllable count 5-7-5. 
+                        <a href="http://www.poets.org/poetsorg/text/poetic-form-haiku" target="_blank">
+                        Learn more!</a>
+                    </h4>
+
                     <form class="form-inline">
 
                         <div class="form-group">
@@ -77,7 +95,67 @@ homeActive: active
 
                     </form>
 
-                </div>
+                </div> <!-- /haiku -->
+
+                <div role="tabpanel" class="tab-pane" id="tanka">
+                    
+                    <h4 class="h4">
+                        <b>Tanka:</b> A form of Japanese poetry consisting of five lines, with the syllable count 5-7-5-7-7. 
+                        <a href="http://www.poets.org/poetsorg/text/poetic-form-tanka" target="_blank">
+                        Learn more!</a>
+                    </h4>
+
+                    <form class="form-inline">
+
+                        <div class="form-group">
+                            <label for="numTankaInput">Maximum Tankas:</label>
+                            <input type="number" id="numTankaInput" class="form-control" value="3"></input>
+                        </div>                
+
+                    </form>
+
+                </div> <!-- /haiku -->
+
+                <div role="tabpanel" class="tab-pane" id="sonnet">
+                    
+                    <h4 class="h4">
+                        <b>Sonnet:</b> A classical Italian form consisting of fourteen lines, usually of 10 syllables each.
+                        <a href="http://www.poets.org/poetsorg/text/poetic-form-sonnet" target="_blank">
+                        Learn more!</a>
+                    </h4>
+                    <!-- <p>
+                        The two major forms of sonnets are <b>Petrarchan</b> and <b>Shakespearean</b>, named after their
+                        most well-known practiotioners.
+                    </p>
+                    <p>
+                        Petrarchan sonnets consist of an octave (8-line stanza) followed by a sestet (6-line stanza).
+                        They generally follow the rhyme scheme ABBAABBA CDECDE.
+                    </p>
+                    <p>
+                        Shakesperean sonnets consist of three quatrains (4-line stanzas) followed by a couplet (2-line stanza).
+                        They generally follow the rhyme scheme ABAB CDCD EFEF GG.
+                    </p>
+                    <p>
+                        Sonnets may also be written in <b>blank verse</b>, which is unrhymed 
+                        <a href="http://www.shmoop.com/literature-glossary/iambic-pentameter.html" target="_blank">iambic pentameter</a>.
+                        While Markomposition can count syllables, it cannot parse text for patterns of stress in order
+                        to create true iambic pentameter. However, if you use source material written in iambic 
+                        pentameter there is a chance your generated poems will also feature this famous meter!
+                    </p>
+                     -->
+                    <form>
+
+                        <div class="form-group">
+                            <label for="sonnetTypeInput">Type:</label>
+                            <label class="radio-inline">
+                              <input type="radio" name="sonnetTypeInput" value="blankVerse" checked> blank verse
+                            </label>
+                        </div>
+
+                    </form>
+
+                </div> <!-- /sonnet -->
+
               </div>
 
             </div>

@@ -64,7 +64,7 @@ var setUpUtilities = function (Config) {
     });
 };
 
-var loadFile = function (Config, filename)
+var loadFile = function (Config, Util, filename)
 {
     $('#feedbackText').show();
 
@@ -72,6 +72,13 @@ var loadFile = function (Config, filename)
         url: '/markomposition/public/resources/texts/' + filename,
         success: function (data) {
             Config.textInput.val(data);
+        },
+        error: function () {
+            Util.displayError('Oh dear... looks like that file won\'t load.',
+                              'Why don\'t you try another file, or copy and ' +
+                              'paste text in from an external source?');
+        },
+        complete: function () {
             $('#feedbackText').hide();
         }
     });
@@ -84,29 +91,45 @@ require([
     'jquery',
     'app.config',
     'generate',
+    'util',
     'bootstrap'
-], function ($, Config, Generate) {
+], function ($, Config, Generate, Util) {
 
     'use strict';
 
-    setUpUtilities(Config);
+    setUpUtilities(Config, Util);
 
     Config.submitBtn.off('click');
     Config.submitBtn.click(Generate);
 
     $('#dickinson').click(function ()
     {
-        loadFile(Config, 'dickinson.txt');
+        loadFile(Config, Util, 'dickinson.txt');
     });
 
     $('#dante').click(function ()
     {
-        loadFile(Config, 'divine_comedy.txt');
+        loadFile(Config, Util, 'divine_comedy.txt');
     });
 
     $('#grimm').click(function ()
     {
-        loadFile(Config, 'grimm.txt');
+        loadFile(Config, Util, 'grimm.txt');
+    });
+
+    $('#petrarch').click(function ()
+    {
+        loadFile(Config, Util, 'petrarch.txt');
+    });
+
+    $('#declaration').click(function ()
+    {
+        loadFile(Config, Util, 'declaration.txt');
+    });
+
+    $('#shakespeare').click(function ()
+    {
+        loadFile(Config, Util, 'shakespeare.txt');
     });
 
 });
