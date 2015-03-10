@@ -47,15 +47,15 @@ worksActive: active
     </tr>
     <tr>
         <td>"Hello"</td>
-        <td>"Hello" --> "world."</td>
+        <td>"Hello" <span class="glyphicon glyphicon-arrow-right"></span> "world."</td>
     </tr>
     <tr>
         <td>"world."</td>
-        <td>"world." --> "Hello"</td>
+        <td>"world." <span class="glyphicon glyphicon-arrow-right"></span> "Hello"</td>
     </tr>
     <tr>
         <td>"universe."</td>
-        <td>"Hello" --> "universe."</td>
+        <td>"Hello" <span class="glyphicon glyphicon-arrow-right"></span> "universe."</td>
     </tr>
     </table></div>
     </div>
@@ -75,11 +75,11 @@ worksActive: active
     </tr>
     <tr>
         <td>"Hello world."</td>
-        <td>"Hello world." --> "world. Hello"</td>
+        <td>"Hello <b><i>world.</i></b>" <span class="glyphicon glyphicon-arrow-right"></span> "<b><i>world.</i></b> Hello"</td>
     </tr>
     <tr>
         <td>"world. Hello"</td>
-        <td>"world. Hello" --> "Hello universe."</td>
+        <td>"world. <b><i>Hello</i></b>" <span class="glyphicon glyphicon-arrow-right"></span> "<b><i>Hello</i></b> universe."</td>
     </tr>
     <tr>
         <td>"Hello universe."</td>
@@ -91,7 +91,7 @@ worksActive: active
     <br>
     <p>
     So then in a <i>third-order Markov chain</i>, each state consists of three words
-    with transitions occuring between states on a common word boundary.
+    with transitions occuring between states on a common two-word boundary.
     </p>
     <br>
 
@@ -104,7 +104,7 @@ worksActive: active
     </tr>
     <tr>
         <td>"Hello world. Hello"</td>
-        <td>"Hello world. Hello" --> "world. Hello universe."</td>
+        <td>"Hello <b><i>world. Hello</i></b>" <span class="glyphicon glyphicon-arrow-right"></span> "<b><i>world. Hello</i></b> universe."</td>
     </tr>
     <tr>
         <td>"world. Hello universe."</td>
