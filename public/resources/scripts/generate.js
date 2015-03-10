@@ -6,23 +6,46 @@ define('generate', [
     'use strict';
 
     var Generate = {},
-        DEBUG = false;
+        DEBUG = false,
+        NUM_ATTEMPTS = 50,
+        NOT_ENOUGH_WORDS_H = 
+            'There\'s not enough words for Markomposition to make poetry!',
+        NOT_ENOUGH_WORDS_B =
+            'You need at least 2-4 words, depending on the fusion level, but ' +
+            'the more words the better!',
+        CANNOT_GENERATE_POEM_H = 
+            'Whoops! Markomposition couldn\'t generate a poem using the ' +
+            'given text and poem parameters. ',
+        CANNOT_GENERATE_POEM_B = 
+            'You might try adding more text ' +
+            'as this gives the generator more choices to work with. Also, ' + 
+            'be sure that your text has a variety of words with different ' + 
+            'word lengths and ending sounds if you are using a poetic form ' + 
+            'that is defined by rhyme scheme or syllables!';
 
     Generate.generate = function () 
     {
         $('#feedbackPoem').show();
 
         var context = {},
-            text = Config.textInput.val();
+            text = Config.textInput.val(),
+            poem,
+            i;
 
         text.replace('\n', '<br>');
         text.replace('\t', '&#160;&#160;&#160;&#160;');
 
         context.words = text.split(/\s+/);
-        context.model = {};
 
         context.chainLevel = parseInt($('input[name="chainInput"]:checked')
                                       .val());
+
+        if (context.words.length <= context.chainLevel)
+        {
+            Util.displayError(NOT_ENOUGH_WORDS_H, NOT_ENOUGH_WORDS_B);
+            $('#feedbackPoem').hide();
+            return;
+        }
 
         if ($('#freeVerseTab').hasClass('active'))
         {
@@ -30,7 +53,29 @@ define('generate', [
         }
         else if ($('#haikuTab').hasClass('active'))
         {
-            Generate.haiku(context);
+            poem = '';
+
+            var numHaikuRequested = parseInt($('#numHaikuInput').val());
+
+            for (i = 0; i < numHaikuRequested; i++)
+            {
+                context.meterScheme = [5, 7, 5];
+                if (Generate.meter(context) === 0)
+                {
+                    poem += context.poem + '<br>';
+                }
+            }
+
+            if (poem === '')
+            {
+                Util.displayError(CANNOT_GENERATE_POEM_H, 
+                                      CANNOT_GENERATE_POEM_B); 
+            }
+            else
+            {
+                Config.poem.html(poem);
+            }
+
         }
 
         $('#feedbackPoem').hide();
@@ -54,6 +99,8 @@ define('generate', [
             console.log('Chain Length: ', context.chainLevel);
             console.log('numWords: ', context.numWords);
         }
+
+        context.model = {};
 
         /* Build the Markov model. */
         for (i = 0; i < context.words.length - context.chainLevel; i++)
@@ -133,21 +180,14 @@ define('generate', [
 
     };
 
-    Generate.haiku = function (context)
+    Generate.meter = function (context)
     {
-        var allTuples = [],
-            MIN_SYLLABLES = 5,
-            MAX_SYLLABLES = 7,
-            ATTEMPTS_PER_HAIKU = 50,
-            attempt,
-            numHaikuRequested,
-            numHaikuCreated = 0,
-            i, j;
+        var attempt, 
+            line, 
+            numSyllables, 
+            i;
 
-        context.MAX_SYLLABLES = 7;
-
-        numHaikuRequested = parseInt($('#numHaikuInput').val());
-        Config.poem.html('');
+        context.MAX_SYLLABLES = Math.max.apply(Math, context.meterScheme);
 
         if (DEBUG) 
         { 
@@ -156,56 +196,65 @@ define('generate', [
         }
 
         /* Build the Markov model. */
-        for (i = 0; i < context.words.length - context.chainLevel; i++)
+        if (context.model === undefined)
         {
-            var tuple = Util.getTuple(context, i);
-
-            if (context.model[tuple] === undefined)
+            context.model = {};
+        
+            for (i = 0; i < context.words.length - context.chainLevel; i++)
             {
-                context.model[tuple] = {tuple: tuple, 
-                                        nextWords:[]};
+                var tuple = Util.getTuple(context, i);
+
+                if (context.model[tuple] === undefined)
+                {
+                    context.model[tuple] = {tuple: tuple, 
+                                            nextWords:[]};
+                }
+
+                var nextWord = context.words[i + context.chainLevel],
+                    syllables = Util.getSyllableWord(nextWord);
+
+                if (syllables >= 0) {
+                    context.model[tuple].nextWords.push(nextWord);   
+                }
             }
 
-            var nextWord = context.words[i + context.chainLevel],
-                syllables = Util.getSyllableWord(nextWord);
-
-            if (syllables >= 0) {
-                context.model[tuple].nextWords.push(nextWord);   
+            if (DEBUG) 
+            {
+                console.log('Model: ', context.model);
             }
-        }
 
-        if (DEBUG) 
-        {
-            console.log('Model: ', context.model);
+            context.allTuples = [];
+
+            for (var t in context.model)
+            {
+                if (context.model.hasOwnProperty(t) && 
+                    context.model[t].tuple !== undefined)
+                {
+                    context.allTuples.push(context.model[t].tuple);
+                }
+            }
         }
 
         /* Build the poem from the model. */
 
-        for (var t in context.model)
-        {
-            if (context.model.hasOwnProperty(t) && 
-                context.model[t].tuple !== undefined)
-            {
-                allTuples.push(context.model[t].tuple);
-            }
-        }
-
         if (DEBUG)
         {
-            console.log('allTuples: ', allTuples);   
+            console.log('allTuples: ', context.allTuples);   
         }
 
-        for (attempt = 0; 
-             attempt < ATTEMPTS_PER_HAIKU * numHaikuRequested; 
-             attempt++)
+        attemptLoop:
+        for (attempt = 0; attempt < NUM_ATTEMPTS; attempt++)
         {
             if (DEBUG)
             {
                 console.debug('attempt: ' + attempt);
             }
 
-            context.currentTuple = Util.randomChoice(allTuples);   
-            if (Util.getSyllableTuple(context.currentTuple) > MIN_SYLLABLES)
+            /* Choose first tuple randomly from all available tuples. */
+            context.currentTuple = Util.randomChoice(context.allTuples); 
+            numSyllables = Util.getSyllableTuple(context.currentTuple);
+
+            if (numSyllables > context.meterScheme[0])
             {
                 if (DEBUG)
                 {
@@ -213,73 +262,34 @@ define('generate', [
                 }
                 continue;
             }
-            
-            context.poem = context.currentTuple[0];
 
-            context.syllablesLeft = MIN_SYLLABLES - 
-                                    Util.getSyllableTuple(context.currentTuple);
+            context.syllablesLeft = context.meterScheme[0] - numSyllables;
+            context.poem = context.currentTuple.join(' ');
 
-            if (DEBUG)
+            /* Complete each line with its meter scheme. */
+            for (line = 0; line < context.meterScheme.length; line++)
             {
-                console.log(context.currentTuple);
-            }
 
-            for (i = 1; i < context.currentTuple.length; i++)
-            {
-                context.poem += ' ' + context.currentTuple[i];
-            }
-
-            if (DEBUG) {
-                console.log('Poem (begin): ', context.poem);   
-            }
-
-            if (Util.completeLine(context) === -1)
-            {
-                if (DEBUG)
+                if (Util.completeLine(context) === -1)
                 {
-                    console.debug('no options on first line');
+                    if (DEBUG)
+                    {
+                        console.debug('no options on line ' + line);
+                    }
+                    continue attemptLoop;
                 }
-                continue;
-            }
 
-            context.syllablesLeft = MAX_SYLLABLES;
-
-            if (Util.completeLine(context) === -1)
-            {
-                if (DEBUG)
+                if (line < context.meterScheme.length - 1)
                 {
-                    console.debug('no options on second line');
+                    context.syllablesLeft = context.meterScheme[line + 1];
                 }
-                continue;
+
             }
 
-            context.syllablesLeft = MIN_SYLLABLES;
-
-            if (Util.completeLine(context) === -1)
-            {
-                if (DEBUG)
-                {
-                    console.debug('no options on third line');
-                }
-                continue;
-            }
-
-            context.poem += '<br>';
-
-            Config.poem.append(context.poem);
-            numHaikuCreated++;
-
-            if (numHaikuCreated === numHaikuRequested)
-            {
-                return;
-            }
-
+            return 0;
         }
 
-        if (numHaikuCreated === 0)
-        {
-            Util.displayError('Uh-oh! Couldn\'t create a poem. Try again!'); 
-        }
+        return -1;
     };
 
     return Generate.generate;

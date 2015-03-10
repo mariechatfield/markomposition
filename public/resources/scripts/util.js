@@ -5,9 +5,10 @@ define('util', [
 {
     var Util = {};
 
-    Util.displayError = function (message)
+    Util.displayError = function (messageHead, messageBody)
     {
-        Config.poem.html('<h3 class="text-danger">' + message + '</h3>');
+        Config.poem.html('<h3 class="text-danger">' + messageHead + '</h3>' + 
+                         '<p>' + messageBody + '</p>');
     };
 
     Util.randomChoice = function (array)
@@ -152,7 +153,7 @@ define('util', [
             var potentialWord = nextWords[i],
                 numSyllables = Util.getSyllableWord(potentialWord);
 
-            if (numSyllables > context.maxSyllables || numSyllables === -1)
+            if (numSyllables > context.syllablesLeft || numSyllables === -1)
             {
                 continue;
             }
